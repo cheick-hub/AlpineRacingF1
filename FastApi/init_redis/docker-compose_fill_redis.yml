@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+
+  fill_redis: # mettre à jour après
+    image: fill_redis_test
+    volumes:
+      - vol_o:/mnt/o
+      - vol_u:/mnt/u
+      # - ~/perfo_fastapi/logs:/app/logs
+
+    network_mode: bridge
+
+# volumes:
+#   vol_o:
+#     name: vol_o
+#     driver_opts:
+#       type: cifs
+#       device: //192.168.112.48/diskO
+#       o: domain=USER,username=WEBAPP,password=AppW3badm
+
+#   vol_u:
+#     name: vol_u
+#     driver_opts:
+#       type: cifs
+#       device: //192.168.113.35/data
+#       o: domain=USER,username=WEBAPP,password=AppW3badm

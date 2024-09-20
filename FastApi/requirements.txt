@@ -1,0 +1,17 @@
+colorlog
+fastapi
+fastparquet
+numpy
+openpyxl
+pandas
+pyarrow
+pydantic
+pyodbc
+pyyaml
+redis
+SQLAlchemy
+sqlparse
+tqdm
+uvicorn
+kafka-python
+requests

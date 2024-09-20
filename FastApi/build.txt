@@ -1,0 +1,3 @@
+cd perfo_fastapi/
+docker build -t perfo_fastapi_image .
+docker compose up

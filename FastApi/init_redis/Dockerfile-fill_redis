@@ -1,0 +1,34 @@
+FROM python:3.11
+#FROM python:3.11-slim-bullseye
+
+ENV http_proxy=http://192.168.252.25:3128
+ENV https_proxy=http://192.168.252.25:3128
+
+WORKDIR /usr/src/app
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+RUN apt-get update
+
+RUN apt install cifs-utils -y
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
+RUN pip install --upgrade pip
+
+
+# install the required packages
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create a workdir and a logs directory
+WORKDIR /app
+
+# Copy mandatory files and directories
+COPY bdd /app/bdd
+COPY config /app/config
+COPY cache /app/cache
+COPY parquet /app/parquet
+COPY redis /app/redis
+COPY utils /app/utils
+COPY init_redis/fill_redis_kafka.py /app/fill_redis_kafka.py
+
+CMD ["python3", "fill_redis_kafka.py"]

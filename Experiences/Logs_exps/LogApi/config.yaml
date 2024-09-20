@@ -1,0 +1,5 @@
+database_name : "logapi"
+database_user  : "root"
+database_password : "root"
+database_host : "localhost"
+database_port : "3306"

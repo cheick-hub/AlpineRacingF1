@@ -1,0 +1,51 @@
+name: fill_redis
+
+services:
+
+  F1:
+    image: alpineracing.azurecr.io/alr/catana_fill_redis:latest
+    volumes:
+      - vol_o:/mnt/o
+      - vol_u:/mnt/u
+      - ./logs/F1:/app/logs
+      - ./config:/app/config
+
+    network_mode: bridge
+    environment:
+      Competition: "F1"
+      Path: "/mnt/o/Symphony_tools/Webappauto/templates"
+      
+  LMDh:
+    image: alpineracing.azurecr.io/alr/catana_fill_redis:latest
+    volumes:
+      - vol_w:/mnt/w
+      - ./logs/LMDh:/app/logs
+      - ./config:/app/config
+
+    network_mode: bridge
+    environment:
+      Competition: "LMDh"
+      Path: "/mnt/w/OUTILS_DP/CATANA/OFFICIAL_DASHBOARDS/templates_LMDh"
+
+volumes:
+  vol_o:
+    name: vol_o
+    driver_opts:
+      type: cifs
+      device: //192.168.112.48/diskO
+      o: domain=USER,username=WEBAPP,password=AppW3badm
+
+  vol_u:
+    name: vol_u
+    driver_opts:
+      type: cifs
+      device: //192.168.113.35/data
+      o: domain=USER,username=WEBAPP,password=AppW3badm
+
+  vol_w:
+    name: vol_w
+    driver_opts:
+      type: cifs
+      device: //192.168.112.39/LMDh
+      o: domain=USER,username=WEBAPP,password=AppW3badm
+       

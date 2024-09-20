@@ -1,0 +1,24 @@
+services:
+  prod_perfo_fastapi:
+    image: alpineracing.azurecr.io/alr/catana_fastapi:prod
+    network_mode: bridge
+    ports:
+      - "6556:6556"
+    volumes:
+      - vol_u:/mnt/u
+      - vol_w:/mnt/w
+      - vol_z:/mnt/z
+      - ./config:/usr/src/app/config
+
+volumes:
+  vol_u:
+    name: vol_u
+    external: true
+
+  vol_w:
+    name: vol_w
+    external: true
+
+  vol_z:
+    name: vol_z
+    external: true

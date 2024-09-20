@@ -1,0 +1,37 @@
+FROM python:3.12.3-slim-bullseye
+
+# ENV http_proxy=http://192.168.252.25:3128
+# ENV https_proxy=http://192.168.252.25:3128
+
+WORKDIR /usr/src/app
+
+# install microsoft odbc driver and requirements (curl, gnupg)
+RUN apt-get update
+RUN apt-get install curl -y && apt-get install -y gnupg
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+RUN apt-get update
+
+RUN apt install cifs-utils -y
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
+RUN pip install --upgrade pip
+
+
+# install the required packages
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy mandatory files and directories
+COPY Analytics ./Analytics
+COPY bdd ./bdd
+COPY cache ./cache
+COPY parquet ./parquet
+COPY modules ./modules
+COPY utils ./utils
+COPY main.py ./main.py
+
+EXPOSE 6556
+
+CMD ["uvicorn", "main:app","--host","0.0.0.0", "--port", "6556", "--root-path", "/api", "--workers", "4", "--log-level", "warning"]
+

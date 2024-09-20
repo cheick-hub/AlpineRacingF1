@@ -1,0 +1,19 @@
+version: "3.9"
+
+
+services:
+  rediscache:
+    image: rediscache_image
+    networks:
+      - redis_network
+    ports:
+      - "6379:6379"
+
+
+networks:
+  redis_network:
+    name: perfo_fastapi_perfo_fastapi_network
+    external: true
+
+
+        

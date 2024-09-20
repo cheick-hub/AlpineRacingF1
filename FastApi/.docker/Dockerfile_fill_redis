@@ -1,0 +1,43 @@
+FROM python:3.12.3-slim-bullseye
+
+# ENV http_proxy=http://192.168.252.25:3128
+# ENV https_proxy=http://192.168.252.25:3128
+
+WORKDIR /usr/src/app
+
+# install microsoft odbc driver and requirements (curl, gnupg)
+RUN apt-get update
+RUN apt-get install curl -y && apt-get install -y gnupg
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+RUN apt-get update
+
+RUN apt install cifs-utils -y
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
+RUN pip install --upgrade pip
+
+
+# install the required packages
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create a workdir and a logs directory
+WORKDIR /app
+RUN mkdir /app/logs 
+
+# Copy mandatory files and directories
+COPY bdd /app/bdd
+#COPY config /app/config
+COPY cache /app/cache
+COPY parquet /app/parquet
+COPY redis /app/redis
+COPY utils /app/utils
+COPY init_redis/fill_redis.py .
+COPY init_redis/fill_redis_script.sh .
+
+RUN chmod +x /app/fill_redis_script.sh
+# permet de supprimer les caractères de fin de ligne windows
+RUN cat fill_redis_script.sh | tr -d '\r' > fill_redis_script_2.sh
+
+CMD ["sh", "fill_redis_script_2.sh"]

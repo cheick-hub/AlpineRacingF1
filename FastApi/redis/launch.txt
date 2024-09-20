@@ -1,0 +1,2 @@
+docker build -t rediscache .
+docker run -d rediscache

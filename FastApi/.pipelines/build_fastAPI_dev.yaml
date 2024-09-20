@@ -1,0 +1,36 @@
+trigger:
+- dev
+
+resources:
+- repo: self
+
+variables:
+  - name: imageRepository
+    value: alr/catana_fastAPI
+  - name: tag
+    value: dev
+  - name: containerRegistry
+    value: 'alpineracing.azurecr.io'
+  - name: dockerRegistryServiceConnection
+    value: '259cfb3a-02e1-43ee-ae22-16b95b1de503'
+  - name: dockerfilePath
+    value: '$(Build.SourcesDirectory)/python/.docker/Dockerfile_fastAPI'
+
+
+stages:
+  - stage: BuildAndPush
+    displayName: Build and push stage
+    jobs:
+    # Job to build the docker image and push it to the registry
+    - job: BuildAndPush
+      
+      steps:
+      - task: Docker@2
+        displayName: Build and push an image to container registry
+        inputs:
+          command: 'buildAndPush'
+          buildContext: python
+          Dockerfile: $(dockerfilePath)
+          repository: $(imageRepository)
+          tags: $(tag)
+          containerRegistry: $(dockerRegistryServiceConnection)

@@ -1,0 +1,11 @@
+Windows:
+  F1: 'U:/'
+  F1 LIVE: 'U:/'
+  FE: 'Z:/'
+  LMDh: 'W:/'
+
+Linux:
+  F1: '/mnt/u/'
+  F1 LIVE: '/mnt/u/'
+  FE: '/mnt/z/'
+  LMDh: '/mnt/w/'
